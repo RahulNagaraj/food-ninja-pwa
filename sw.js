@@ -1,4 +1,5 @@
 const staticCacheName = 'site-static-v2';
+const dynamicCacheName = 'site-dynamic-v1';
 
 const assets = [
   '/',
@@ -48,8 +49,18 @@ self.addEventListener('fetch', evt => {
   evt.respondWith(
     caches.match(evt.request)
       .then(cacheRes => {
-        return cacheRes || fetch(evt.request);
+        return cacheRes || fetch(evt.request).then(fetchRes => {
+          // Dynamic caching
+          return caches.open(dynamicCacheName)
+            .then(cache => {
+              // Clone the response and store it in cache before returning the response to the user.
+              cache.put(evt.request.url, fetchRes.clone());
+              return fetchRes;
+          })
+          .catch(err => console.log('Unable to open dynamic cache.', err))
+        })
+        .catch(err => console.log('Unable to fetch request.'))
       })
-      .catch(err => console.log('Unable to fetch data from cache'))
+      .catch(err => console.log('Unable to fetch data from cache.'))
   );
 });
