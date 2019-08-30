@@ -10,6 +10,7 @@ const assets = [
   '/css/materialize.min.css',
   '/img/dish.png',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
 // Install service worker
@@ -27,10 +28,17 @@ self.addEventListener('install', evt => {
 
 // Activate event
 self.addEventListener('activate', evt => {
-  console.log('Service worker has been activated.');
+  // console.log('Service worker has been activated.');
 });
 
 // Fetch events
 self.addEventListener('fetch', evt => {
-  console.log('fetch event', evt);
+  // console.log('fetch event', evt);
+  evt.respondWith(
+    caches.match(evt.request)
+      .then(cacheRes => {
+        return cacheRes || fetch(evt.request);
+      })
+      .catch(err => console.log('Unable to fetch data from cache'))
+  )
 });
