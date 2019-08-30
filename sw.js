@@ -58,10 +58,12 @@ self.addEventListener('fetch', evt => {
               cache.put(evt.request.url, fetchRes.clone());
               return fetchRes;
           })
-          .catch(err => console.log('Unable to open dynamic cache.', err))
         })
-        .catch(err => caches.match('/pages/offline.html'))
       })
-      .catch(err => console.log('Unable to fetch data from cache.'))
+      .catch(() => {
+        if (evt.request.url.indexOf('.html') > -1) {
+          return caches.match('/pages/offline.html');
+        }
+      })
   );
 });
