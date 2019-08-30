@@ -1,9 +1,10 @@
 const staticCacheName = 'site-static-v2';
-const dynamicCacheName = 'site-dynamic-v1';
+const dynamicCacheName = 'site-dynamic-v2';
 
 const assets = [
   '/',
   '/index.html',
+  '/pages/offline.html',
   '/js/app.js',
   '/js/ui.js',
   '/js/materialize.min.js',
@@ -36,7 +37,7 @@ self.addEventListener('activate', evt => {
         // Delete old cache
         return Promise.all(
           keyList
-            .filter(key => key !== staticCacheName)
+            .filter(key => key !== staticCacheName && key !== dynamicCacheName)
             .map(key => caches.delete(key))
         )
       })
@@ -59,7 +60,7 @@ self.addEventListener('fetch', evt => {
           })
           .catch(err => console.log('Unable to open dynamic cache.', err))
         })
-        .catch(err => console.log('Unable to fetch request.'))
+        .catch(err => caches.match('/pages/offline.html'))
       })
       .catch(err => console.log('Unable to fetch data from cache.'))
   );
