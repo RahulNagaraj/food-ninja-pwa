@@ -15,6 +15,20 @@ const assets = [
   'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
+// Limit cache size
+const limitCacheSize = (name, size) => {
+  caches.open(name)
+    .then(cache => {
+      cache.keys()
+        .then(key => {
+          if (key.length > size) {
+            cache.delete(key[0])
+              .then(limitCacheSize(name, size))
+          }
+        })
+    })
+};
+
 // Install service worker
 self.addEventListener('install', evt => {
   // console.log('Service worker has been installed.');
@@ -56,6 +70,8 @@ self.addEventListener('fetch', evt => {
             .then(cache => {
               // Clone the response and store it in cache before returning the response to the user.
               cache.put(evt.request.url, fetchRes.clone());
+              // Limit cache size to 15
+              limitCacheSize(dynamicCacheName, 15);
               return fetchRes;
           })
         })
