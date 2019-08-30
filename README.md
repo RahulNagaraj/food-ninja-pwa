@@ -1,2 +1,3 @@
 # food-ninja-pwa
-A food app to demonstrate PWA
+
+A food recipe app to demonstrate PWA
