@@ -1,4 +1,4 @@
-const staticCacheName = 'site-static';
+const staticCacheName = 'site-static-v2';
 
 const assets = [
   '/',
@@ -29,6 +29,17 @@ self.addEventListener('install', evt => {
 // Activate event
 self.addEventListener('activate', evt => {
   // console.log('Service worker has been activated.');
+  evt.waitUntil(
+    caches.keys()
+      .then(keyList => { // keyList is an array of cache keys
+        // Delete old cache
+        return Promise.all(
+          keyList
+            .filter(key => key !== staticCacheName)
+            .map(key => caches.delete(key))
+        )
+      })
+  );
 });
 
 // Fetch events
@@ -40,5 +51,5 @@ self.addEventListener('fetch', evt => {
         return cacheRes || fetch(evt.request);
       })
       .catch(err => console.log('Unable to fetch data from cache'))
-  )
+  );
 });
