@@ -1,3 +1,15 @@
+// Offline data
+// Sync with indexedDB
+db.enablePersistence().catch(err => {
+  if (err.code === 'failed-precondition') {
+    // Multiple tabs open at once
+    console.log('Persistence Failed');
+  } else if (err.code === 'unimplemented') {
+    // Lack of browser support
+    console.log('Persistence is not available');
+  }
+});
+
 // Real-time listener
 db.collection('recipes').onSnapshot(snapshot => {
   // console.log(snapshot.docChanges());
