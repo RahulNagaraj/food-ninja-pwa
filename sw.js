@@ -59,27 +59,27 @@ self.addEventListener('activate', evt => {
 });
 
 // Fetch events
-self.addEventListener('fetch', evt => {
-  // console.log('fetch event', evt);
-  evt.respondWith(
-    caches.match(evt.request)
-      .then(cacheRes => {
-        return cacheRes || fetch(evt.request).then(fetchRes => {
-          // Dynamic caching
-          return caches.open(dynamicCacheName)
-            .then(cache => {
-              // Clone the response and store it in cache before returning the response to the user.
-              cache.put(evt.request.url, fetchRes.clone());
-              // Limit cache size to 15
-              limitCacheSize(dynamicCacheName, 15);
-              return fetchRes;
-          })
-        })
-      })
-      .catch(() => {
-        if (evt.request.url.indexOf('.html') > -1) {
-          return caches.match('/pages/offline.html');
-        }
-      })
-  );
-});
+// self.addEventListener('fetch', evt => {
+//   // console.log('fetch event', evt);
+//   evt.respondWith(
+//     caches.match(evt.request)
+//       .then(cacheRes => {
+//         return cacheRes || fetch(evt.request).then(fetchRes => {
+//           // Dynamic caching
+//           return caches.open(dynamicCacheName)
+//             .then(cache => {
+//               // Clone the response and store it in cache before returning the response to the user.
+//               cache.put(evt.request.url, fetchRes.clone());
+//               // Limit cache size to 15
+//               limitCacheSize(dynamicCacheName, 15);
+//               return fetchRes;
+//           })
+//         })
+//       })
+//       .catch(() => {
+//         if (evt.request.url.indexOf('.html') > -1) {
+//           return caches.match('/pages/offline.html');
+//         }
+//       })
+//   );
+// });
