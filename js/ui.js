@@ -26,3 +26,9 @@ const renderRecipe = (data, id) => {
 
   receipes.innerHTML += html;
 };
+
+// Remove recipe
+const removeRecipe = id => {
+  const recipe = document.querySelector(`.recipe[data-id=${id}]`);
+  recipe.remove();
+};
